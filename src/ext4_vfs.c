@@ -547,10 +547,20 @@ static int ext4_vfs_unmount(struct vfs_superblock *sb)
     return VFS_OK;
 }
 
+extern int ext4_mkfs(const char *dev_name, const char *vol_name);
+extern int ext4_fsck(const char *dev_name, bool repair);
+
+static int ext4_vfs_fsck(const char *source, int repair)
+{
+    return ext4_fsck(source, (bool)repair);
+}
+
 static struct vfs_filesystem_type s_ext4_fs_type = {
     .name    = "ext4",
     .mount   = ext4_vfs_mount,
     .unmount = ext4_vfs_unmount,
+    .mkfs    = ext4_mkfs,
+    .fsck    = ext4_vfs_fsck,
     .next    = NULL,
 };
 
